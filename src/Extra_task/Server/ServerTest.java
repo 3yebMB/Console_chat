@@ -54,9 +54,6 @@ public class ServerTest {
         }
 
         for (ClientHandler o: clients) {
-//            if (o.getSocket().isClosed())
-//                clients.remove(o);
-//            else
                 o.sendMsg(msg);
         }
     }
