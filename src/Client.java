@@ -3,46 +3,60 @@ import java.net.*;
 
 public class Client {
 
-    public void main(String args) throws IOException {
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_BLACK = "\u001B[30m";
+    public static final String ANSI_RED = "\u001B[31m";
+    public static final String ANSI_GREEN = "\u001B[32m";
+    public static final String ANSI_YELLOW = "\u001B[33m";
+    public static final String ANSI_BLUE = "\u001B[34m";
+    public static final String ANSI_PURPLE = "\u001B[35m";
+    public static final String ANSI_CYAN = "\u001B[36m";
+    public static final String ANSI_WHITE = "\u001B[37m";
 
-        System.out.println("Добро пожаловать в олдскульный консольный чат");
+    final static int PORT = 8189;
 
-        Socket fromserver = null;
+    DataInputStream in;
+    DataOutputStream out;
+    PrintWriter pw;
+    Socket socket = null;
 
-        String ipAdr;
+    public void go(){
+        System.out.println(ANSI_YELLOW + "Добро пожаловать в олдскульный консольный чат" + ANSI_RESET);
 
-        if (args.length()==0) {
-            System.out.println("Вы запустили его на localhost");
-//            System.exit(-1);
-            ipAdr = "localhost";
+        System.out.println("Соеденяемся с сервером... " + Main.IP);
+
+        try {
+            socket = new Socket(Main.IP, Main.PORT);
+            in = new DataInputStream(socket.getInputStream());
+            out = new DataOutputStream(socket.getOutputStream());
+
+            PrintWriter    out = new PrintWriter(socket.getOutputStream(),true);
+            DataInputStream fuser = new DataInputStream(System.in);
+
+            while (fuser!=null) {
+                out.println(fuser);
+                String str = in.readUTF();
+                System.out.println(str);
+            }
+
+        }  catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                socket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-        else ipAdr = args;
+    }
 
-        System.out.println("Соеденяемся с сервером... "+ipAdr);
-
-        fromserver = new Socket(ipAdr,8189);
-        BufferedReader in  = new
-                BufferedReader(new
-                InputStreamReader(fromserver.getInputStream()));
-        PrintWriter    out = new
-                PrintWriter(fromserver.getOutputStream(),true);
-        BufferedReader inu = new
-                BufferedReader(new InputStreamReader(System.in));
-
-        String fuser,fserver;
-
-        while ((fuser = inu.readLine())!=null) {
-            out.println(fuser);
-            fserver = in.readLine();
-            System.out.println(fserver);
-            if (fuser.equalsIgnoreCase("close")) break;
-            if (fuser.equalsIgnoreCase("exit")) break;
-            if (fuser.equalsIgnoreCase("выход")) break;
+    public void sendMsg(String msg){
+        //BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        try {
+//            out.writeUTF(reader.readLine());
+            out.writeUTF(msg);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
-        out.close();
-        in.close();
-        inu.close();
-        fromserver.close();
     }
 }
