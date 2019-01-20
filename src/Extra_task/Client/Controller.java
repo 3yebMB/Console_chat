@@ -65,7 +65,6 @@ public class Controller implements Initializable {
     }
 
     public void sendMsg() {
-       // textArea.appendText(textField.getText() + "\n");
         try {
             out.writeUTF(textField.getText());
             textField.clear();

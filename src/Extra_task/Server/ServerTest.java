@@ -26,7 +26,10 @@ public class ServerTest {
             while (true) {
                 socket = server.accept();
                 System.out.println("Клиент подключился");
-                clients.add(new ClientHandler(this,socket));
+//                for (ClientHandler c: clients){
+//                    if (c.getSocket().isClosed()) clients.remove(c);
+//                }
+                clients.add(new ClientHandler(this, socket));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -46,7 +49,11 @@ public class ServerTest {
 
     public void broadcastMsg(String msg) {
         for (ClientHandler o: clients) {
-            o.sendMsg(msg);
+            if (o.getSocket().isClosed())
+                clients.remove(o);
+            else
+                o.sendMsg(msg);
         }
     }
+
 }

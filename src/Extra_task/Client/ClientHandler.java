@@ -15,6 +15,10 @@ public class ClientHandler {
     private DataInputStream in;
     private ServerTest server;
 
+    public Socket getSocket() {
+        return socket;
+    }
+
     public ClientHandler(ServerTest server, Socket socket) {
         try {
             this.socket = socket;
@@ -27,12 +31,18 @@ public class ClientHandler {
                 public void run() {
                     try {
                         while (true) {
-                            String str = in.readUTF();
-                            if(str.equals("/end")) {
+                            String str;
+//                            if ((server != null) && (!socket.isClosed()))
+                                str = in.readUTF();
+//                            else str = "/end";
+                            if (str.equals("/end")) {
                                 out.writeUTF("/serverClosed");
                                 break;
                             }
-                            server.broadcastMsg(str);
+//                            if (str != null)
+                                server.broadcastMsg(str);
+//                            else
+//                                break;
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
