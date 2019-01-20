@@ -1,26 +1,23 @@
-import java.io.IOException;
+package console_chat;
+
+import console_chat.Client.Controller;
+import console_chat.Server.ServerTest;
 
 public class Main {
-    static final String IP = "localhost";
-    static final int PORT = 8189;
-
     public static void main(String[] args) {
-        Server server = new Server();
-        Client client = new Client();
-        Thread t1 = new Thread(new Runnable() {
+        new Thread(new Runnable() {
             @Override
             public void run() {
-                Server.go();
+                new ServerTest();
             }
-        });
-
-        t1.start();
+        }).start();
 
         new Thread(new Runnable() {
             @Override
             public void run() {
-                client.go();
+                new Controller().init();
             }
         }).start();
     }
 }
+
