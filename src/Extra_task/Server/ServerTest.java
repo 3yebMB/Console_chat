@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Iterator;
 import java.util.Scanner;
 import java.util.Vector;
 
@@ -26,9 +27,6 @@ public class ServerTest {
             while (true) {
                 socket = server.accept();
                 System.out.println("Клиент подключился");
-//                for (ClientHandler c: clients){
-//                    if (c.getSocket().isClosed()) clients.remove(c);
-//                }
                 clients.add(new ClientHandler(this, socket));
             }
         } catch (IOException e) {
@@ -48,10 +46,14 @@ public class ServerTest {
     }
 
     public void broadcastMsg(String msg) {
+        Iterator<ClientHandler> iter = clients.iterator();
+        while (iter.hasNext()) {
+            if(iter.next().getSocket().isClosed()) {
+                iter.remove();
+            }
+        }
+
         for (ClientHandler o: clients) {
-            if (o.getSocket().isClosed())
-                clients.remove(o);
-            else
                 o.sendMsg(msg);
         }
     }
