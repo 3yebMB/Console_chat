@@ -31,18 +31,12 @@ public class ClientHandler {
                 public void run() {
                     try {
                         while (true) {
-                            String str;
-//                            if ((server != null) && (!socket.isClosed()))
-                                str = in.readUTF();
-//                            else str = "/end";
+                            String str = in.readUTF();
                             if (str.equals("/end")) {
                                 out.writeUTF("/serverClosed");
                                 break;
                             }
-//                            if (str != null)
                                 server.broadcastMsg(str);
-//                            else
-//                                break;
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
